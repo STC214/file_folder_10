@@ -37,7 +37,8 @@ def get_filenames(root_dir):
             # prt(fi_list)
 
             for i in fi_list:
-                res = re.search(pattern=(r'\d{1,3}'), string=i)
+                tstr = i.i.replace('mp4', '')
+                res = re.search(pattern=(r'\d{1,3}'), string=tstr)
                 # prt(res.group(0))
                 num_str = res.group(0)
                 # print(len(num_str))
@@ -97,7 +98,7 @@ def move_file(root_dict):
                 size_count += y
                 file_tmp_list.sort()
                 if len(file_tmp_list) != 0:
-                # if len(file_tmp_list) > 1:
+                    # if len(file_tmp_list) > 1:
                     if int(size_count / 1024 / 1024) > 500:
                         # prt(file_tmp_list)
                         new_tmp_list = [file_tmp_list[-1], ]
@@ -211,5 +212,6 @@ def main():
     # file_move(r'H:\learn_video\Python数据分析课程')
     file_move(r'G:\down')
     file_move(r'E:\Program Files\JiJiDown\Download')
+
 
 main()
