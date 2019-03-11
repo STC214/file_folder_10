@@ -37,10 +37,11 @@ def get_filenames(root_dir):
             # prt(fi_list)
 
             for i in fi_list:
-                tstr = i.i.replace('mp4', '')
+                tstr = i.replace('mp4', '')
                 res = re.search(pattern=(r'\d{1,3}'), string=tstr)
                 # prt(res.group(0))
-                num_str = res.group(0)
+                if res != None:
+                    num_str = res.group(0)
                 # print(len(num_str))
                 q = i
                 if len(num_str) == 1:
@@ -166,18 +167,7 @@ def file_move(root_dir):
         if len(fi_list) != 0:
             # print('\r\n')
             res_mol = False
-            # if len(dirs) != 0:
-            #     for i in dirs:
-            #         mol_th = re.findall(pattern=(r'\d{3}\——\d{3}'), string=i)
-            #         if mol_th:
-            #             if len(mol_th) < 2:
-            #                 res_mol = True
-            #             else:
-            #                 res_mol = False
-            #         else:
-            #             res_mol = False
-            #
-            # if res_mol == False:
+
             txt_list_path = root + '\\' + 'file_list.txt'
             json_path = root + '\\' + 'file_list.json'
 
