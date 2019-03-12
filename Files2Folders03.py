@@ -66,6 +66,17 @@ def save_file(root_dict, fi_list, json_path, txt_list_path):
         f.write(strs)
 
 
+# 处理记录列表的bug
+def path_con_for_list(f_path):
+    path_splited = f_path.split('\\')
+    files_name = path_splited.pop()
+    path_splited.pop()
+    # print(path_splited)
+    root_path = '\\'.join(path_splited)
+
+    return files_name, path_splited, root_path
+
+
 # 目标子目录处理方法
 def dir_con(dir_str):
     nalc = re.findall(pattern=(r'\d{3}\——\d{3}'), string=dir_str)
@@ -166,7 +177,7 @@ def file_move(root_dir):
 
         if len(fi_list) != 0:
             # print('\r\n')
-            res_mol = False
+            # res_mol = False
 
             txt_list_path = root + '\\' + 'file_list.txt'
             json_path = root + '\\' + 'file_list.json'
@@ -192,16 +203,62 @@ def file_move(root_dir):
             move_file(root_dict)
 
 
+def gen_txt_json(root_dir):
+    fil_list = []
+    for root, dirs, files in os.walk(root_dir, False):
+        fi_list = []
+        for i in files:
+            if 'mp4' in i:
+                fi_list.append(i)
+        for i in files:
+            if 'flv' in i:
+                fi_list.append(i)
+        for i in files:
+            if 'mkv' in i:
+                fi_list.append(i)
+
+        if len(fi_list) != 0:
+            for i in fi_list:
+                ffp = root + '\\' + i
+                fil_list.append(ffp)
+
+    nef = sorted(fil_list)
+
+    fl = []
+    fd = {}
+    for f in range(1, len(nef)):
+        files_name, path_splited, root_path = path_con_for_list(nef[f])
+        fn_1, ps_1, rp_1 = path_con_for_list(nef[f - 1])
+        txt_path = rp_1 + '\\' + 'file_list.txt'
+        json_path = rp_1 + '\\' + 'file_list.json'
+
+        if path_splited == ps_1:
+            fl.append(fn_1)
+            fl.append(files_name)
+            fl = sorted(list(set(fl)))
+            fd[rp_1] = fl
+
+        if path_splited != ps_1:
+            save_file(fd, fl, json_path, txt_path)
+            fl = []
+            fd = {}
+
+        if f == len(nef) - 1:
+            save_file(fd, fl, json_path, txt_path)
+
+        prt(fl)
+        prt(fd)
+
+
 ##################################################################################
 
 def main():
-    get_filenames(r'H:\learn_video')
-    get_filenames(r'G:\down')
-    get_filenames(r'E:\Program Files\JiJiDown\Download')
-    file_move(r'H:\learn_video')
-    # file_move(r'H:\learn_video\Python数据分析课程')
-    file_move(r'G:\down')
-    file_move(r'E:\Program Files\JiJiDown\Download')
+    path_list = [r'H:\learn_video', r'G:\down', r'E:\Program Files\JiJiDown\Download']
+    # pathi = r'G:\down'
+    for pathi in path_list:
+        get_filenames(pathi)
+        file_move(pathi)
+        gen_txt_json(pathi)
 
 
 main()
