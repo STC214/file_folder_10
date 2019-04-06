@@ -109,7 +109,7 @@ def file_name(root_dirs):
                 else:
                     s = False
 
-            if s == False:
+            if s is False:
                 for i in files:
                     file_pn = root + '\\' + i
                     file_npn = root + '\\' + strs_con(i)

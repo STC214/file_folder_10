@@ -91,9 +91,11 @@ def move_file(root_dict):
 
                         file_tmp_list.pop()
 
-                        start_num = re.search(pattern=(r'\d{3}'), string=(file_tmp_list[0])).group(0)
+                        start_num = re.search(
+                            pattern=(r'\d{3}'), string=(file_tmp_list[0])).group(0)
                         print(start_num)
-                        end_num = re.search(pattern=(r'\d{3}'), string=file_tmp_list[-1]).group(0)
+                        end_num = re.search(
+                            pattern=(r'\d{3}'), string=file_tmp_list[-1]).group(0)
 
                         son_dir_name = start_num + '——' + end_num
                         son_path = k + '\\' + son_dir_name
@@ -113,8 +115,10 @@ def move_file(root_dict):
                         size_count = new_count
 
                     if int(size_count / 1024 / 1024) < 500 and (file_list[-1] == file_tmp_list[-1]):
-                        start_num = re.search(pattern=(r'\d{3}'), string=file_tmp_list[0]).group(0)
-                        end_num = re.search(pattern=(r'\d{3}'), string=file_tmp_list[-1]).group(0)
+                        start_num = re.search(
+                            pattern=(r'\d{3}'), string=file_tmp_list[0]).group(0)
+                        end_num = re.search(
+                            pattern=(r'\d{3}'), string=file_tmp_list[-1]).group(0)
                         son_dir_name = start_num + '——' + end_num
                         son_path = k + '\\' + son_dir_name
                         son_path = dir_con(son_path)
@@ -129,7 +133,7 @@ def move_file(root_dict):
                             # new_path = dir_con(new_path)
                             shutil.move(old_path, new_path)
                 print('处理完成：' + k)
-    except:
+    except Exception as e:
         pass
 
 

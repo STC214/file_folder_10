@@ -13,6 +13,7 @@ from pprint import pprint as prt
 4.若文件名没有序号则添加序号
 5.除了视频主目录其他目录下没有列表文件
 6.修复了mp4文件会被修改后缀的bug
+7.修复了以前会创建多层目录保存file_list文件的bug
 '''
 
 
@@ -40,7 +41,7 @@ def get_filenames(root_dir):
                 tstr = i.replace('mp4', '')
                 res = re.search(pattern=(r'\d{1,3}'), string=tstr)
                 # prt(res.group(0))
-                if res != None:
+                if res is not None:
                     num_str = res.group(0)
                 # print(len(num_str))
                 q = i
@@ -118,9 +119,11 @@ def move_file(root_dict):
 
                         file_tmp_list.pop()
 
-                        start_num = re.search(pattern=(r'\d{3}'), string=(file_tmp_list[0])).group(0)
+                        start_num = re.search(
+                            pattern=(r'\d{3}'), string=(file_tmp_list[0])).group(0)
                         print(start_num)
-                        end_num = re.search(pattern=(r'\d{3}'), string=file_tmp_list[-1]).group(0)
+                        end_num = re.search(
+                            pattern=(r'\d{3}'), string=file_tmp_list[-1]).group(0)
 
                         son_dir_name = start_num + '——' + end_num
                         son_path = k + '\\' + son_dir_name
@@ -140,8 +143,10 @@ def move_file(root_dict):
                         size_count = new_count
 
                     if int(size_count / 1024 / 1024) < 500 and (file_list[-1] == file_tmp_list[-1]):
-                        start_num = re.search(pattern=(r'\d{3}'), string=file_tmp_list[0]).group(0)
-                        end_num = re.search(pattern=(r'\d{3}'), string=file_tmp_list[-1]).group(0)
+                        start_num = re.search(
+                            pattern=(r'\d{3}'), string=file_tmp_list[0]).group(0)
+                        end_num = re.search(
+                            pattern=(r'\d{3}'), string=file_tmp_list[-1]).group(0)
                         son_dir_name = start_num + '——' + end_num
                         son_path = k + '\\' + son_dir_name
                         son_path = dir_con(son_path)
@@ -156,7 +161,7 @@ def move_file(root_dict):
                             # new_path = dir_con(new_path)
                             shutil.move(old_path, new_path)
                 print('处理完成：' + k)
-    except:
+    except Exception as e:
         pass
 
 
@@ -238,7 +243,7 @@ def gen_txt_json(root_dir):
             fl = sorted(list(set(fl)))
             fd[rp_1] = fl
 
-        if path_splited != ps_1:
+        if path_splited != ps_1 and (fl != []) and (fd != {}):
             save_file(fd, fl, json_path, txt_path)
             fl = []
             fd = {}
@@ -250,15 +255,28 @@ def gen_txt_json(root_dir):
         prt(fd)
 
 
+def del_more_log(root_dir):
+    for root, dirs, files in os.walk(root_dir, False):
+        for i in files:
+            if ('file_list.txt' in i) or ('file_list.json' in i):
+                if root.count('——') >= 2:
+                    print(root)
+                    if os.path.exists(root):
+                        shutil.rmtree(root)
+
+
 ##################################################################################
 
 def main():
-    path_list = [r'H:\learn_video', r'G:\down', r'E:\Program Files\JiJiDown\Download']
-    # pathi = r'G:\down'
+    path_list = [r'H:\learn_video', r'G:\down',
+                 r'E:\Program Files\JiJiDown\Download']
+    # path_list = [r'E:\Program Files\JiJiDown\Download']
+    # pathi = r'E:\Program Files\JiJiDown\Download'
     for pathi in path_list:
         get_filenames(pathi)
         file_move(pathi)
         gen_txt_json(pathi)
+        del_more_log(pathi)
 
 
 main()
