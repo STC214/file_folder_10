@@ -14,6 +14,7 @@ from pprint import pprint as prt
 5.除了视频主目录其他目录下没有列表文件
 6.修复了mp4文件会被修改后缀的bug
 7.修复了以前会创建多层目录保存file_list文件的bug
+8.提升了效率
 '''
 
 
@@ -33,7 +34,7 @@ def get_filenames(root_dir):
             if 'mkv' in i:
                 fi_list.append(i)
 
-        if len(fi_list) != 0:
+        if len(fi_list) != 0 and ('——' not in root):
             print('\r\n')
             # prt(fi_list)
 
@@ -44,18 +45,19 @@ def get_filenames(root_dir):
                 if res is not None:
                     num_str = res.group(0)
                 # print(len(num_str))
-                q = i
-                if len(num_str) == 1:
-                    q = q.replace(num_str, ('00' + num_str), 1)
-                if len(num_str) == 2:
-                    q = q.replace(num_str, ('0' + num_str), 1)
+                    q = i
+                    if len(num_str) == 1:
+                        q = q.replace(num_str, ('00' + num_str), 1)
+                    if len(num_str) == 2:
+                        q = q.replace(num_str, ('0' + num_str), 1)
 
-                print(q)
-                old_path = root + '\\' + i
-                new_path = root + '\\' + q
-                os.rename(old_path, new_path)
+                    print(q)
+                    old_path = root + '\\' + i
+                    new_path = root + '\\' + q
+                    os.rename(old_path, new_path)
 
 
+# 文件列表保存方法
 def save_file(root_dict, fi_list, json_path, txt_list_path):
     with open(json_path, 'w', encoding='utf-8') as f:
         json.dump(root_dict, f, ensure_ascii=False, indent=4)
@@ -180,7 +182,7 @@ def file_move(root_dir):
             if 'mkv' in i:
                 fi_list.append(i)
 
-        if len(fi_list) != 0:
+        if len(fi_list) != 0 and ('——' not in root):
             # print('\r\n')
             # res_mol = False
 
@@ -206,6 +208,8 @@ def file_move(root_dir):
                     os.remove(txt_list_path)
 
             move_file(root_dict)
+        else:
+            print('此处不需要处理')
 
 
 def gen_txt_json(root_dir):
@@ -222,37 +226,37 @@ def gen_txt_json(root_dir):
             if 'mkv' in i:
                 fi_list.append(i)
 
-        if len(fi_list) != 0:
+        if len(fi_list) != 0 and ('——' not in root):
             for i in fi_list:
                 ffp = root + '\\' + i
                 fil_list.append(ffp)
 
-    nef = sorted(fil_list)
+            nef = sorted(fil_list)
 
-    fl = []
-    fd = {}
-    for f in range(1, len(nef)):
-        files_name, path_splited, root_path = path_con_for_list(nef[f])
-        fn_1, ps_1, rp_1 = path_con_for_list(nef[f - 1])
-        txt_path = rp_1 + '\\' + 'file_list.txt'
-        json_path = rp_1 + '\\' + 'file_list.json'
-
-        if path_splited == ps_1:
-            fl.append(fn_1)
-            fl.append(files_name)
-            fl = sorted(list(set(fl)))
-            fd[rp_1] = fl
-
-        if path_splited != ps_1 and (fl != []) and (fd != {}):
-            save_file(fd, fl, json_path, txt_path)
             fl = []
             fd = {}
+            for f in range(1, len(nef)):
+                files_name, path_splited, root_path = path_con_for_list(nef[f])
+                fn_1, ps_1, rp_1 = path_con_for_list(nef[f - 1])
+                txt_path = rp_1 + '\\' + 'file_list.txt'
+                json_path = rp_1 + '\\' + 'file_list.json'
 
-        if f == len(nef) - 1:
-            save_file(fd, fl, json_path, txt_path)
+                if path_splited == ps_1:
+                    fl.append(fn_1)
+                    fl.append(files_name)
+                    fl = sorted(list(set(fl)))
+                    fd[rp_1] = fl
 
-        prt(fl)
-        prt(fd)
+                if path_splited != ps_1 and (fl != []) and (fd != {}):
+                    save_file(fd, fl, json_path, txt_path)
+                    fl = []
+                    fd = {}
+
+                if f == len(nef) - 1:
+                    save_file(fd, fl, json_path, txt_path)
+
+                prt(fl)
+                prt(fd)
 
 
 def del_more_log(root_dir):
