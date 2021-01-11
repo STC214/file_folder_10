@@ -272,9 +272,11 @@ def del_more_log(root_dir):
 ##################################################################################
 
 def main():
-    path_list = [r'H:\learn_video', r'G:\down',
-                 r'E:\Program Files\JiJiDown\Download']
+    # path_list = [r'H:\learn_video', r'G:\down',
+    #              r'E:\Program Files\JiJiDown\Download']
     # path_list = [r'E:\Program Files\JiJiDown\Download']
+    path_list = [r'K:\教程\AI-大数据03', r'K:\教程\27周自动化']
+    # path_list = [r'G:\日期']
     # pathi = r'E:\Program Files\JiJiDown\Download'
     for pathi in path_list:
         get_filenames(pathi)
