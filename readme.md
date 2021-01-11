@@ -7,20 +7,20 @@
 
 
 
-#### 增加使用DownKyi下载的视频文件支持 2021年1月11日
+#### v5.0增加使用DownKyi下载的视频文件支持 2021年1月11日
 支持了使用DownKyi下载的视频
 使用以下程序即可
 F2F_for_down_by_downkyi.py
 
 
-#### 修复所有bug 2019年4月6日
+#### v4.0 修复所有bug 2019年4月6日
 删除了多余的file_list文件
 优化了运行效率
 
 
 
 
-#### not change
+#### v3.0 not change
 小调试
 
 
